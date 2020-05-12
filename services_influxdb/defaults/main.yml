@@ -1,0 +1,4 @@
+---
+
+# influxdb
+influxdb_data_path: /srv/influxdb

@@ -1,0 +1,26 @@
+---
+# meshviewer
+
+- name: clean old meshviewer sourcedir
+  file:
+    path: "{{ meshviewer_src }}"
+    state: absent
+
+- name: create deploy directory
+  file:
+    path: "{{ meshviewer_path }}"
+    state: directory
+    mode: 0755
+    owner: www-data
+    group: www-data
+
+- name: "clone meshviewer repo"
+  git:
+    repo: "https://github.com/ffrgb/meshviewer.git"
+    dest: "{{ meshviewer_src }}"
+    version: develop
+    force: yes
+    clone: yes
+    update: yes
+  become: false
+ 

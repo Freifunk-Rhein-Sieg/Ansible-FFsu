@@ -1,0 +1,229 @@
+module.exports = function () {
+  return {
+    // Variables are NODE_ID and NODE_NAME (only a-z0-9\- other chars are replaced with _)
+    'nodeInfos': [
+      {
+        'name': 'Clients',
+        'href': 'https://{{ http_grafana_prefix }}.{{ http_domain_external }}/dashboard/db/freifunk-rsk-knoten?panelId=1&var-node={NODE_ID}&from=now-1d&fullscreen',
+        'image': 'https://{{ http_grafana_prefix }}.{{ http_domain_external }}/render/dashboard-solo/db/freifunk-rsk-knoten?panelId=1&var-node={NODE_ID}&from=now-1d&theme=light&width=650&height=350',
+        'title': 'Knoten {NODE_ID} - weitere Statistiken'
+      },
+      {
+        'name': 'Traffic',
+        'href': 'https://{{ http_grafana_prefix }}.{{ http_domain_external }}/dashboard/db/freifunk-rsk-knoten?panelId=2&var-node={NODE_ID}&from=now-1d&fullscreen',
+        'image': 'https://{{ http_grafana_prefix }}.{{ http_domain_external }}/render/dashboard-solo/db/freifunk-rsk-knoten?panelId=2&var-node={NODE_ID}&from=now-1d&theme=light&width=650&height=350',
+        'title': 'Knoten {NODE_ID} - weitere Statistiken'
+      },
+      {
+        'name': 'Load',
+        'href': 'https://{{ http_grafana_prefix }}.{{ http_domain_external }}/dashboard/db/freifunk-rsk-knoten?panelId=4&var-node={NODE_ID}&from=now-1d&fullscreen',
+        'image': 'https://{{ http_grafana_prefix }}.{{ http_domain_external }}/render/dashboard-solo/db/freifunk-rsk-knoten?panelId=4&var-node={NODE_ID}&from=now-1d&theme=light&width=650&height=350',
+        'title': 'Knoten {NODE_ID} - weitere Statistiken'
+      },
+      {
+        'name': 'Airtime',
+        'href': 'https://{{ http_grafana_prefix }}.{{ http_domain_external }}/dashboard/db/freifunk-rsk-knoten?panelId=5&var-node={NODE_ID}&from=now-1d&fullscreen',
+        'image': 'https://{{ http_grafana_prefix }}.{{ http_domain_external }}/render/dashboard-solo/db/freifunk-rsk-knoten?panelId=5&var-node={NODE_ID}&from=now-1d&theme=light&width=650&height=350',
+        'title': 'Knoten {NODE_ID} - weitere Statistiken'
+      }
+    ],
+    'globalInfos': [
+      {
+        'name': 'Statistik - letzte zwei Tage',
+        'href': 'https://{{ http_grafana_prefix }}.{{ http_domain_external }}/dashboard/db/freifunk-rsk-global?panelId=11&orgId=1&from=now-2d&to=now&var-INTERVAL=1d&fullscreen',
+        'image': 'https://{{ http_grafana_prefix }}.{{ http_domain_external }}/render/dashboard-solo/db/freifunk-rsk-global?panelId=11&orgId=1&from=now-2d&to=now&var-INTERVAL=1d&theme=light&width=650&height=350&tz=Europe%2FBerlin',
+        'title': 'Statistik - letzte zwei Tage'
+      }
+    ],
+    // String or array of data provider are supported
+    'dataPath': [
+       '/data/tdf4/tdf/',
+       '/data/tdf5/inn/',
+       '/data/tdf6/flu/',
+       '/data/fgw02/domain01/',
+       '/data/fgw02/domain03/',
+       '/data/fgw03/domain04/',
+       '/data/fgw03/domain05/',
+       '/data/fgw04/domain07/',
+       '/data/fgw04/domain11/',
+       '/data/fgw04/domain14/'
+     ],
+    'siteName': 'Freifunk Rhein-Sieg',
+    'mapLayers': [
+{% for layer in map_layers %}
+      {
+        'name': '{{ layer.name }}',
+        'url': '{{ layer.url }}',
+        'config': {
+          'maxZoom': {{ layer.max_zoom }},
+          'attribution': '{{ layer.attribution }}'
+        }
+      },
+{% endfor %}
+    ],
+    // Set a visible frame
+    'fixedCenter': [
+      // Northwest
+      [
+        50.981343946,
+        6.484680176 
+      ],
+      // Southeast
+      [
+        50.567102219,
+        7.521514893 
+      ]
+    ],
+    'domainNames': [
+      {
+        'domain': 'su-su',
+        'name': 'Siegburg'
+      },
+      {
+        'domain': 'su-lo',
+        'name': 'Lohmar'
+      },
+      {
+        'domain': 'su-sa',
+        'name': 'Sankt Augustin'
+      },
+      {
+        'domain': 'su-snw',
+        'name': 'Soziale Netzwerke'
+      },
+      {
+        'domain': 'su-ak',
+        'name': 'Altenkirchen'
+      },
+      {
+        'domain': 'su-nk',
+        'name': 'Niederkassel'
+      },
+      {
+        'domain': 'su-rhb',
+        'name': 'Rheinbach'
+      },
+      {
+        'domain': 'dom14old',
+        'name': 'Rheinbach'
+      },
+      {
+        'domain': 'su-mck',
+        'name': 'Meckenheim'
+      },
+      {
+        'domain': 'tdf-tdf',
+        'name': 'Troisdorf Umland'
+      },
+      {
+        'domain': 'tdf',
+        'name': 'Troisdorf Umland'
+      },
+      {
+        'domain': 'tdf-inn',
+        'name': 'Troisdorf Innenstadt'
+      },
+      {
+        'domain': 'inn',
+        'name': 'Troisdorf Innenstadt'
+      },
+      {
+        'domain': 'tdf-flu',
+        'name': 'Troisdorf Soziale Netze'
+      },
+      {
+        'domain': 'flu',
+        'name': 'Troisdorf Soziale Netze'
+      },
+      {
+        'domain': 'dom15',
+        'name': 'Voreifel'
+      }
+    ],  
+    'siteNames': [
+    {
+      'site': 'inn',
+      'name': 'Troisdorf Innenstadt'
+    },
+    {
+      'site': 'tdf',
+      'name': 'Troisdorf Umland'
+    },
+    {
+      'site': 'flu',
+      'name': 'Troisdorf Soziale Netze'
+    },
+    {
+      'site': 'su-su',
+      'name': 'Siegburg'
+    },
+    {
+      'site': 'su-snw',
+      'name': 'Soziale Netzwerke'
+    },
+    {
+      'site': 'su-lo',
+      'name': 'Lohmar'
+    },
+    {
+      'site': 'su-sa',
+      'name': 'Sankt Augustin'
+    },
+    {
+      'site': 'su-ak',
+      'name': 'Altenkirchen'
+    },
+    {
+      'site': 'su-nk',
+      'name': 'Niederkassel'
+    },
+    {
+      'site': 'su-rhb',
+      'name': 'Rheinbach'
+    },
+    {
+      'site': 'dom14old',
+      'name': 'Rheinbach'
+    },
+    {
+      'site': 'dom15',
+      'name': 'Voreifel'
+    }
+  ],
+   'linkList': [
+       {
+        'title': 'Home',
+        'href': 'https://map.freifunk-rhein-sieg.net/'
+      },
+      {
+        'title': 'Firmware',
+        'href': 'https://downloader.freifunk-rhein-sieg.net/'
+      },
+      {
+        'title': 'Webseite',
+        'href': 'https://www.freifunk-rhein-sieg.net'
+      },
+      {
+        'title': 'Impressum',
+        'href': 'https://www.freifunk-rhein-sieg.net/impressum/'
+      },
+      {
+        'title': 'Datenschutz ',
+        'href': 'https://www.freifunk-rhein-sieg.net/datenschutz/'
+      },
+      {
+        'title': 'Map:Troisdorf',
+        'href': 'https://map.freifunk-troisdorf.de/'
+      },
+      {
+        'title': 'Map:Siegburg',
+        'href': 'https://map.freifunk-siegburg.de/'
+      },
+      {
+        'title': 'Map:Rheinbach',
+        'href': 'https://map.freifunk-rheinbach.de/'
+      }
+  ] 
+
+  };
+};

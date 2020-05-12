@@ -1,0 +1,18 @@
+- name: add backports repo
+  apt_repository:
+    repo: "{{ item }}"
+    state: present
+  with_items:
+    - "deb http://http.debian.net/debian/ {{ ansible_distribution_release }}-backports main"
+  when: ansible_distribution == "Debian"
+
+- name: install backports-kernel
+  apt: name="{{item}}" default_release=jessie-backports update_cache=yes state=latest
+  when: ansible_distribution == "Debian"
+  with_items:
+    - linux-headers-amd64
+    - linux-image-amd64
+  notify: 
+    - Neustarten
+    - Neustart abwarten
+

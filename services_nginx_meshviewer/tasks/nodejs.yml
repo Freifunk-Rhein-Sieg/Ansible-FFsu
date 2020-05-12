@@ -1,0 +1,19 @@
+---
+
+
+- name: ensure apt key for nodejs is present
+  apt_key:
+    state: present
+    id: 68576280
+    url: "https://deb.nodesource.com/gpgkey/nodesource.gpg.key"
+
+
+- name: ensure nodejs apt repo is present
+  shell: "curl -sL https://deb.nodesource.com/setup_11.x | bash -"
+  args:
+    executable: /bin/bash
+    
+- name: install nodejs package
+  package:
+    name: nodejs
+    state: present

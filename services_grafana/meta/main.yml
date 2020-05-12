@@ -1,0 +1,4 @@
+---
+dependencies:  
+- { role: services_influxdb }
+- { role: services_collectd }

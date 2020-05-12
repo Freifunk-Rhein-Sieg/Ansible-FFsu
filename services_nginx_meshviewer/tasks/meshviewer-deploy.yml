@@ -1,0 +1,40 @@
+---
+
+- name: create meshviewer config
+  template:
+    src: config.js.j2
+    dest: "{{ meshviewer_src }}/config.js"
+    mode: 0644
+    owner: www-data
+    group: www-data
+  become: false
+
+- name: yarn meshviewer_dep
+  shell: yarn
+  args:
+    executable: /bin/bash
+    chdir: "{{ meshviewer_src }}"
+  become: false
+
+- name: building
+  shell: yarn run gulp
+  args:
+    executable: /bin/bash 
+    chdir: "{{ meshviewer_src }}"
+  become: false
+
+- name: deploy
+  shell: 'rm -rf {{ meshviewer_path }}/* && cp -ar build/* {{ meshviewer_path }} && chown www-data:www-data -R {{ meshviewer_path }}'
+  args:
+    executable: /bin/bash
+    chdir: "{{ meshviewer_src }}"
+    warn: no
+
+- name: write vhost
+  template:
+    src: meshviewer_vhost.conf.j2
+    dest: /etc/nginx/conf.d/meshviewer.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart nginx

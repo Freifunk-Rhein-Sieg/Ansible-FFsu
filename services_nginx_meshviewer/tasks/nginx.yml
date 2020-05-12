@@ -1,0 +1,158 @@
+---
+
+- name: install nginx packages
+  package:
+    name: nginx
+    state: present
+
+- name: install ssl-cert packages
+  package:
+    name: ssl-cert
+    state: present
+
+- stat: path=/etc/ssl/fullchain.pem
+  register: sslcert
+
+- name: Letsencrypt-Zertifikat beantragen und installieren
+  shell: cd /usr/src && if [ ! -e simp_le ]; then git clone https://github.com/zenhack/simp_le ; fi && cd simp_le && ./bootstrap.sh && if [ ! -e venv/bin/python ]; then ./venv.sh; fi && export PATH=/usr/src/simp_le/venv/bin:$PATH && cd /etc/ssl && simp_le --email technik@{{http_domain_external}} -f account_key.json -f key.pem -f fullchain.pem -d {{http_meshviewer_prefix}}.{{http_domain_external}}:/var/www/{{http_meshviewer_prefix}}.{{http_domain_external}}
+  notify: restart nginx
+  when: sslcert.stat.exists == False
+
+- name: Cronjob für Zertifikatserneuerung
+  cron: name="simp_le" weekday="2" hour="20" minute="0" job="/etc/ssl/renew_ssl.sh"
+
+
+- name: create config snippets directory
+  file:
+    path: /etc/nginx/snippets
+    state: directory
+    mode: 0755
+    owner: root
+    group: root
+
+- name: create certs directory
+  file:
+    path: /etc/nginx/ssl/{{ inventory_hostname_short }}.{{ http_domain_external }}
+    state: directory
+    mode: 0550
+    owner: www-data
+    group: www-data
+
+- name: create backup config directory
+  file:
+    path: /etc/ssl/nginx/conf.d
+    state: directory
+    mode: 0755
+    owner: root
+    group: root
+
+- name: copy renew_ssl.sh to /etc/ssl
+  copy:
+    src: renew_ssl.sh
+    dest: /etc/ssl/renew_ssl.sh
+    mode: 0644
+    owner: root
+    group: root    
+
+- name: copy check_certs.sh to /etc/ssl
+  copy:
+    src: renew_ssl.sh
+    dest: /etc/ssl/check_certs.sh
+    mode: 0644
+    owner: root
+    group: root    
+
+- name: create snakeoil cert
+  shell: make-ssl-cert generate-default-snakeoil
+  args:
+    creates: /etc/ssl/certs/ssl-cert-snakeoil.pem
+
+- name: copy snakeoil ssl key for first start
+  copy:
+    src: /etc/ssl/private/ssl-cert-snakeoil.key
+    dest: /etc/nginx/ssl/{{ inventory_hostname_short }}.{{ http_domain_external }}/privkey.pem
+    remote_src: yes
+    force: no
+    owner: www-data
+    group: www-data
+    mode: 0440
+
+- name: copy snakeoil ssl cert for first start
+  copy:
+    src: /etc/ssl/certs/ssl-cert-snakeoil.pem
+    dest: /etc/nginx/ssl/{{ inventory_hostname_short }}.{{ http_domain_external }}/fullchain.pem
+    remote_src: yes
+    force: no
+    owner: www-data
+    group: www-data
+    mode: 0440
+
+
+- name: copy gzip.conf to snippets
+  copy:
+    src: gzip.conf
+    dest: /etc/nginx/snippets/gzip.conf
+    mode: 0644
+    owner: root
+    group: root
+
+- name: copy redirect-to-ssl.conf to snippets
+  copy:
+    src: redirect-to-ssl.conf
+    dest: /etc/nginx/snippets/redirect-to-ssl.conf
+    mode: 0644
+    owner: root
+    group: root
+
+- name: write letsencrypt-acme-challenge.conf to snippets
+  template:
+    src: letsencrypt-acme-challenge.conf.j2
+    dest: /etc/nginx/snippets/letsencrypt-acme-challenge.conf
+    mode: 0644
+    owner: root
+    group: root
+
+- name: write nginx configuration nginx.conf
+  template:
+    src: nginx.conf.j2
+    dest: /etc/nginx/nginx.conf
+    mode: 0644
+    owner: root
+    group: root
+  notify: restart nginx
+
+- name: write nginx configuration meshviewer.conf
+  template:
+    src: meshviewer_vhost.conf.j2
+    dest: /etc/nginx/conf.d/meshviewer.conf
+    mode: 0644
+    owner: root
+    group: root
+    
+- name: write nginx configuration meshviewer_noredirect.conf
+  template:
+    src: meshviewer_noredirect.conf.j2
+    dest: /etc/ssl/nginx/conf.d/meshviewer_noredirect.conf
+    mode: 0644
+    owner: root
+    group: root   
+ 
+- name: manage html directory for static files
+  file:
+    path: /var/www/html/static
+    state: directory
+    mode: 0755
+
+- name: write index.html
+  template:
+    src: index.html.j2
+    dest: /var/www/html/index.html
+    mode: 0644
+
+- name: configure systemd unit nginx
+  systemd:
+    name: nginx
+    state: started
+    enabled: yes
+
+

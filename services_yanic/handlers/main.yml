@@ -1,0 +1,10 @@
+---
+
+- name: Restart yanic
+  service: name=yanic_bat{{item[0]}} state=restarted
+
+- name: Restart yanic-publish
+  service: name=yanic-publish.timer state=restarted
+
+- name: Reload systemd
+  command: systemctl daemon-reload

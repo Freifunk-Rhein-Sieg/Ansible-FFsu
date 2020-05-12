@@ -1,0 +1,32 @@
+---
+
+
+# nginx
+
+http_domain_external: "freifunk-rhein-sieg.net"
+http_domain_internal: "freifunk-rhein-sieg.net"
+
+http_grafana_prefix: "grafana"
+http_influx_prefix: "influx"
+
+http_nginx_external: "{{ http_grafana_prefix }}.{{ http_domain_external }}"
+http_nginx_internal: "{{ http_influx_prefix }}.{{ http_domain_internal }}"
+nginx_data_path: "/srv/www/{{ http_nginx_external }}"
+
+
+# grafana
+grafana_data_path: /srv/grafana
+grafana_web_path: /usr/share/grafana/public/
+grafana_log: /var/log/grafana
+grafana_ip: 127.0.0.1
+grafana_port: 3000
+grafana_domain: "{{ http_grafana_prefix }}.{{ http_domain_external }}"
+grafana_sess: grafana_sess
+grafana_admin_user: admin
+grafana_admin_default_pass: admin
+grafana_secret_key: 
+grafana_smtp_host: localhost
+grafana_smtp_user: "grafana@{{ http_domain_external }}"
+grafana_smtp_password:
+grafana_smtp_sender: "grafana@{{ http_domain_external }}"
+

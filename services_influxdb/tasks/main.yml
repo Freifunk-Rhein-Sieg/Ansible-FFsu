@@ -1,0 +1,46 @@
+---
+
+- name: Import InfluxDB GPG signing key
+  apt_key: url=https://repos.influxdata.com/influxdb.key state=present
+
+- name: Add InfluxDB repository
+  apt_repository: repo='deb https://repos.influxdata.com/debian/ {{ ansible_distribution_release | lower }} main' state=present
+
+- name: Add the user 'influxdb'
+  user:
+    name: influxdb
+    comment: influx database
+    shell: /bin/false
+    home: /var/lib/influxdb
+
+- name: Ensure group "influxdb" exists
+  group:
+      name: influxdb
+      state: present
+
+- name: Install InfluxDB packages
+  apt: name=influxdb state=present
+
+- name: Install InfluxDB client packages
+  apt: name=influxdb-client state=present
+
+- name: create influxdb data folders
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: influxdb
+    group: influxdb
+    mode: 0775
+  with_items:
+      - "{{ influxdb_data_path }}"
+      - "{{ influxdb_data_path }}/data"
+      - "{{ influxdb_data_path }}/meta"
+      - "{{ influxdb_data_path }}/wal"
+
+- name: configure influxdb
+  template: src=influxdb.conf.j2 dest=/etc/influxdb/influxdb.conf
+
+- name: Enable influxdb
+  service: name=influxdb enabled=yes
+  notify:
+    - Restart influxdb

@@ -1,0 +1,85 @@
+# {{ ansible_managed }}
+[respondd]
+enable           = {{ yanic_respondd | ternary('true','false') }}
+collect_interval = "{{ yanic_respondd_collect_interval }}"
+synchronize      = "{{ yanic_respondd_synchronize_interval }}"
+
+[respondd.sites.ffsu]
+domains            = ["{{ site_code }}"]
+
+[[respondd.interfaces]]
+ifname = "{{ ansible_facts.ansible_br[0-9][0-9].device }}"
+
+[webserver]
+enable  = {{ yanic_webserver | ternary('true','false') }}
+bind    = "{{ yanic_webserver_bind }}"
+webroot = "{{ yanic_webserver_webroot }}"
+
+[nodes]
+state_path     = "{{ yanic_nodes_state_path }}"
+prune_after    = "{{ yanic_nodes_prune_after }}"
+save_interval  = "{{ yanic_nodes_save_interval }}"
+offline_after  = "{{ yanic_nodes_offline_after }}"
+
+[[nodes.output.meshviewer-ffsu]]
+enable  = {{ yanic_meshviewer_ffsu_enable | ternary('true','false') }}
+path    = "{{ yanic_meshviewer_ffsu_path }}"
+
+[nodes.output.meshviewer-ffsu.filter]
+no_owner = true
+blacklist = []
+sites = ["{{ yanic_sites }}"]
+#has_location = true
+
+#[nodes.output.meshviewer-ffsu.filter.in_area]
+#latitude_min = 34.30
+#latitude_max = 71.85
+#longitude_min = -24.96
+#longitude_max = 39.72
+
+[[nodes.output.meshviewer]]
+enable         = {{ yanic_meshviewer_enable | ternary('true','false') }}
+version        = {{ yanic_meshviewer_version }}
+nodes_path     = "{{ yanic_meshviewer_nodes }}"
+graph_path     = "{{ yanic_meshviewer_graph }}"
+
+[nodes.output.meshviewer.filter]
+#no_owner = true
+
+[[nodes.output.nodelist]]
+enable   = false
+path = "{{ yanic_meshviewer_nodelist }}"
+
+[nodes.output.nodelist.filter]
+#no_owner = true
+
+[database]
+delete_after = "{{ yanic_database_delete_after }}"
+delete_interval = "{{ yanic_database_delete_interval }}"
+
+{% for db in yanic_influxdb %}
+[[database.connection.influxdb]]
+enable   = {{ db.enable | ternary('true','false') }}
+address  = "{{ db.host }}"
+database = "{{ db.database }}"
+username = "{{ db.username }}"
+password = "{{ db.password }}"
+{% endfor %}
+
+[database.connection.influxdb.tags]
+
+{% for db in yanic_graphite %}
+[[database.connection.graphite]]
+enable   = {{ db.enable | ternary('true','false') }}
+address  = "{{ db.address }}"
+prefix   = "{{ db.prefix }}"
+{% endfor %}
+
+[[database.connection.respondd]]
+enable   = {{ yanic_repondd_enable | ternary('true','false') }}
+type     = "udp6"
+address  = "{{ yanic_repondd_remotehost }}"
+
+[[database.connection.logging]]
+enable   = false
+path     = "/var/log/yanic.log"

@@ -1,0 +1,30 @@
+---
+- name: Install dependencies
+  apt:
+    pkg: "{{item}}"
+    state: installed
+  with_items:
+    - python3-pip
+    - python-ethtool
+    - ethtool
+    - lsb-release
+    - python3-netifaces
+
+- name: Install python dependencies
+  pip: 
+    name: "{{ item }}"
+    state: present
+    executable: pip3
+  with_items:
+    - psutil
+    - netifaces
+
+
+- name: Clone mesh-announce repo
+  git: repo=https://github.com/Freifunk-Rhein-Sieg/mesh-announce-multidomain.git dest=/opt/mesh-announce/ clone=yes update=yes
+#  notify: restart respondd
+
+
+#- name: "create systemd files"
+#  template: src="respondd.service.j2" dest="/lib/systemd/system/respondd.service"
+#  notify: systemctl reload

@@ -1,0 +1,19 @@
+---
+
+# prepare environment
+
+#nginx
+- include: nginx.yml
+
+# nodejs
+- include: nodejs.yml
+# yarn
+- include: yarn.yml
+
+
+# meshviewer repo
+
+- include: meshviewer.yml
+
+- include: meshviewer-deploy.yml
+

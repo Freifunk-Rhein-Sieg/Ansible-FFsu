@@ -1,0 +1,105 @@
+#
+# cron.d/yanic_collector -- schedules periodic wget of yanic .json data
+#
+# Copyright © technik <technik@freifunk-siegburg.de>
+# distributed under the terms of GPL 2.0
+#
+
+# gw's tdf
+# tdf1.freifunk-troisdorf.de
+* * * * * root wget -U yanic_collector -q http://tdf1.freifunk-troisdorf.de/graph.json -O /opt/data/tdf4/graph.json; cp /opt/data/tdf4/graph.json /opt/data/tdf4/tdf/graph.json >/dev/null 2>&1
+* * * * * root wget -U yanic_collector -q http://tdf1.freifunk-troisdorf.de/meshviewer.json -O /opt/data/tdf4/meshviewer.json; cp /opt/data/tdf4/meshviewer.json /opt/data/tdf4/tdf/meshviewer.json >/dev/null 2>&1
+* * * * * root wget -U yanic_collector -q http://tdf1.freifunk-troisdorf.de/nodelist.json -O /opt/data/tdf4/nodelist.json; cp /opt/data/tdf4/nodelist.json /opt/data/tdf4/tdf/nodelist.json  >/dev/null 2>&1
+* * * * * root wget -U yanic_collector -q http://tdf1.freifunk-troisdorf.de/nodes.json -O /opt/data/tdf4/nodes.json; /opt/data/jsoncheck.pl /opt/data/tdf4/nodes.json /opt/data/tdf4/tdf/nodes.json; /opt/data/nodesv2tov1.pl /opt/data/tdf4/tdf/nodes.json /opt/data/merged/tdf_nodes_v1.json >/dev/null 2>&1
+# inn1.freifunk-troisdorf.de
+* * * * * root wget -U yanic_collector -q http://inn1.freifunk-troisdorf.de/graph.json -O /opt/data/tdf5/graph.json; cp /opt/data/tdf5/graph.json /opt/data/tdf5/inn/graph.json >/dev/null 2>&1
+* * * * * root wget -U yanic_collector -q http://inn1.freifunk-troisdorf.de/meshviewer.json -O /opt/data/tdf5/meshviewer.json; cp /opt/data/tdf5/meshviewer.json /opt/data/tdf5/inn/meshviewer.json >/dev/null 2>&1
+* * * * * root wget -U yanic_collector -q http://inn1.freifunk-troisdorf.de/nodelist.json -O /opt/data/tdf5/nodelist.json; cp /opt/data/tdf5/nodelist.json /opt/data/tdf5/inn/nodelist.json >/dev/null 2>&1
+* * * * * root wget -U yanic_collector -q http://inn1.freifunk-troisdorf.de/nodes.json -O /opt/data/tdf5/nodes.json; /opt/data/jsoncheck.pl /opt/data/tdf5/nodes.json /opt/data/tdf5/inn/nodes.json; /opt/data/nodesv2tov1.pl /opt/data/tdf5/inn/nodes.json /opt/data/merged/inn_nodes_v1.json >/dev/null 2>&1
+# flu1.freifunk-troisdorf.de
+* * * * * root wget -U yanic_collector -q http://flu1.freifunk-troisdorf.de/graph.json -O /opt/data/tdf6/graph.json; cp /opt/data/tdf6/graph.json /opt/data/tdf6/flu/graph.json >/dev/null 2>&1
+* * * * * root wget -U yanic_collector -q http://flu1.freifunk-troisdorf.de/meshviewer.json -O /opt/data/tdf6/meshviewer.json; cp /opt/data/tdf6/meshviewer.json /opt/data/tdf6/flu/meshviewer.json >/dev/null 2>&1
+* * * * * root wget -U yanic_collector -q http://flu1.freifunk-troisdorf.de/nodelist.json -O /opt/data/tdf6/nodelist.json; cp /opt/data/tdf6/nodelist.json /opt/data/tdf6/flu/nodelist.json >/dev/null 2>&1
+* * * * * root wget -U yanic_collector -q http://flu1.freifunk-troisdorf.de/nodes.json -O /opt/data/tdf6/nodes.json; /opt/data/jsoncheck.pl /opt/data/tdf6/nodes.json /opt/data/tdf6/flu/nodes.json ;/opt/data/nodesv2tov1.pl /opt/data/tdf6/flu/nodes.json /opt/data/merged/flu_nodes_v1.json >/dev/null 2>&1
+# alter mapserver su
+* * * * * root wget -U yanic_collector -q https://map.freifunk-siegburg.de/data/graph.json  -O /opt/data/mapsu/graph.json >/dev/null 2>&1
+* * * * * root wget -U yanic_collector -q https://map.freifunk-siegburg.de/data/nodelist.json  -O /opt/data/mapsu/nodelist.json >/dev/null 2>&1
+* * * * * root wget -U yanic_collector -q https://map.freifunk-siegburg.de/data/nodes.json -O /opt/data/mapsu/nodes.json >/dev/null 2>&1
+# gw's su
+# fgw01
+# 07
+# * * * * * root wget -U yanic_collector -q -4 http://fgw01.freifunk-siegburg.de/07_graph.json -O /opt/data/fgw01/07_graph.json; cp /opt/data/fgw01/07_graph.json /opt/data/fgw01/domain07/graph.json >/dev/null 2>&1
+# * * * * * root wget -U yanic_collector -q -4 http://fgw01.freifunk-siegburg.de/07_meshviewer.json -O /opt/data/fgw01/07_meshviewer.json; cp  /opt/data/fgw01/07_meshviewer.json /opt/data/fgw01/domain07/meshviewer.json>/dev/null 2>&1
+# * * * * * root wget -U yanic_collector -q -4 http://fgw01.freifunk-siegburg.de/07_nodelist.json -O /opt/data/fgw01/07_nodelist.json; cp /opt/data/fgw01/07_nodelist.json /opt/data/fgw01/domain07/nodelist.json >/dev/null 2>&1
+# * * * * * root wget -U yanic_collector -q -4 http://fgw01.freifunk-siegburg.de/07_nodes.json -O /opt/data/fgw01/07_nodes.json; /opt/data/jsoncheck.pl /opt/data/fgw01/07_nodes.json /opt/data/fgw01/domain07/nodes.json>/dev/null 2>&1
+# fgw02
+# 01
+* * * * * root wget -U yanic_collector -q -4 http://fgw02.freifunk-siegburg.de/01_graph.json -O /opt/data/fgw02/01_graph.json; cp /opt/data/fgw02/01_graph.json /opt/data/fgw02/domain01/graph.json >/dev/null 2>&1
+* * * * * root wget -U yanic_collector -q -4 http://fgw02.freifunk-siegburg.de/01_meshviewer.json -O /opt/data/fgw02/01_meshviewer.json;  /opt/data/replace_wrong_geolocation_su.pl /opt/data/fgw02/01_meshviewer.json; cp /opt/data/fgw02/01_meshviewer.json /opt/data/fgw02/domain01/meshviewer.json >/dev/null 2>&1
+* * * * * root wget -U yanic_collector -q -4 http://fgw02.freifunk-siegburg.de/01_nodelist.json -O /opt/data/fgw02/01_nodelist.json; /opt/data/replace_wrong_geolocation_su.pl /opt/data/fgw02/01_nodelist.json; cp /opt/data/fgw02/01_nodelist.json /opt/data/fgw02/domain01/nodelist.json >/dev/null 2>&1
+* * * * * root wget -U yanic_collector -q -4 http://fgw02.freifunk-siegburg.de/01_nodes.json -O /opt/data/fgw02/01_nodes.json; /opt/data/jsoncheck.pl /opt/data/fgw02/01_nodes.json /opt/data/fgw02/domain01/nodes.json >/dev/null 2>&1
+# 01 old v1 Versions for MobileMeshViewer
+* * * * * root wget -U yanic_collector -q -4 http://fgw02.freifunk-siegburg.de/01_graph_v1.json -O /opt/data/fgw02/01_graph_v1.json; cp /opt/data/fgw02/01_graph_v1.json /opt/data/fgw02/domain01/graph_v1.json; cp /opt/data/fgw02/domain01/graph_v1.json /opt/data/merged/graph_v1.json >/dev/null 2>&1
+* * * * * root wget -U yanic_collector -q -4 http://fgw02.freifunk-siegburg.de/01_nodes_v1.json -O /opt/data/fgw02/01_nodes_v1.json; /opt/data/replace_wrong_geolocation_su.pl /opt/data/fgw02/01_nodes.json; /opt/data/jsoncheck.pl /opt/data/fgw02/01_nodes_v1.json /opt/data/fgw02/domain01/nodes_v1.json; cp /opt/data/fgw02/domain01/nodes_v1.json /opt/data/merged/nodes_v1.json >/dev/null 2>&1
+# 03
+* * * * * root wget -U yanic_collector -q -4 http://fgw02.freifunk-siegburg.de/03_graph.json -O /opt/data/fgw02/03_graph.json; cp /opt/data/fgw02/03_graph.json /opt/data/fgw02/domain03/graph.json >/dev/null 2>&1
+* * * * * root wget -U yanic_collector -q -4 http://fgw02.freifunk-siegburg.de/03_meshviewer.json -O /opt/data/fgw02/03_meshviewer.json; cp /opt/data/fgw02/03_meshviewer.json /opt/data/fgw02/domain03/meshviewer.json >/dev/null 2>&1
+* * * * * root wget -U yanic_collector -q -4 http://fgw02.freifunk-siegburg.de/03_nodelist.json -O /opt/data/fgw02/03_nodelist.json; cp /opt/data/fgw02/03_nodelist.json /opt/data/fgw02/domain03/nodelist.json >/dev/null 2>&1
+* * * * * root wget -U yanic_collector -q -4 http://fgw02.freifunk-siegburg.de/03_nodes.json -O /opt/data/fgw02/03_nodes.json; /opt/data/jsoncheck.pl /opt/data/fgw02/03_nodes.json /opt/data/fgw02/domain03/nodes.json  >/dev/null 2>&1
+# 03 old v1 Versions for MobileMeshViewer
+* * * * * root wget -U yanic_collector -q -4 http://fgw02.freifunk-siegburg.de/03_graph_v1.json -O /opt/data/fgw02/03_graph_v1.json; cp /opt/data/fgw02/03_graph_v1.json /opt/data/fgw02/domain03/graph_v1.json >/dev/null 2>&1
+* * * * * root wget -U yanic_collector -q -4 http://fgw02.freifunk-siegburg.de/03_nodes_v1.json -O /opt/data/fgw02/03_nodes_v1.json; /opt/data/jsoncheck.pl /opt/data/fgw02/03_nodes_v1.json /opt/data/fgw02/domain03/nodes_v1.json  >/dev/null 2>&1
+# fgw03
+# 04
+* * * * * root wget -U yanic_collector -q -4 http://fgw03.freifunk-siegburg.de/04_graph.json -O /opt/data/fgw03/04_graph.json; cp /opt/data/fgw03/04_graph.json /opt/data/fgw03/domain04/graph.json >/dev/null 2>&1
+* * * * * root wget -U yanic_collector -q -4 http://fgw03.freifunk-siegburg.de/04_meshviewer.json -O /opt/data/fgw03/04_meshviewer.json; cp /opt/data/fgw03/04_meshviewer.json /opt/data/fgw03/domain04/meshviewer.json >/dev/null 2>&1
+* * * * * root wget -U yanic_collector -q -4 http://fgw03.freifunk-siegburg.de/04_nodelist.json -O /opt/data/fgw03/04_nodelist.json; cp /opt/data/fgw03/04_nodelist.json /opt/data/fgw03/domain04/nodelist.json >/dev/null 2>&1
+* * * * * root wget -U yanic_collector -q -4 http://fgw03.freifunk-siegburg.de/04_nodes.json -O /opt/data/fgw03/04_nodes.json; /opt/data/jsoncheck.pl /opt/data/fgw03/04_nodes.json /opt/data/fgw03/domain04/nodes.json >/dev/null 2>&1
+# 04 old v1 Versions for MobileMeshViewer
+* * * * * root wget -U yanic_collector -q -4 http://fgw03.freifunk-siegburg.de/04_graph_v1.json -O /opt/data/fgw03/04_graph_v1.json; cp /opt/data/fgw03/04_graph_v1.json /opt/data/fgw03/domain04/graph_v1.json >/dev/null 2>&1
+* * * * * root wget -U yanic_collector -q -4 http://fgw03.freifunk-siegburg.de/04_nodes_v1.json -O /opt/data/fgw03/04_nodes_v1.json; /opt/data/jsoncheck.pl /opt/data/fgw03/04_nodes_v1.json /opt/data/fgw03/domain04/nodes_v1.json >/dev/null 2>&1
+# 05
+* * * * * root wget -U yanic_collector -q -4 http://fgw03.freifunk-siegburg.de/05_graph.json -O /opt/data/fgw03/05_graph.json; cp /opt/data/fgw03/05_graph.json /opt/data/fgw03/domain05/graph.json >/dev/null 2>&1
+* * * * * root wget -U yanic_collector -q -4 http://fgw03.freifunk-siegburg.de/05_meshviewer.json -O /opt/data/fgw03/05_meshviewer.json; cp /opt/data/fgw03/05_meshviewer.json /opt/data/fgw03/domain05/meshviewer.json >/dev/null 2>&1
+* * * * * root wget -U yanic_collector -q -4 http://fgw03.freifunk-siegburg.de/05_nodelist.json -O /opt/data/fgw03/05_nodelist.json; cp /opt/data/fgw03/05_nodelist.json /opt/data/fgw03/domain05/nodelist.json >/dev/null 2>&1
+* * * * * root wget -U yanic_collector -q -4 http://fgw03.freifunk-siegburg.de/05_nodes.json -O /opt/data/fgw03/05_nodes.json; /opt/data/jsoncheck.pl /opt/data/fgw03/05_nodes.json /opt/data/fgw03/domain05/nodes.json >/dev/null 2>&1
+# 05 old v1 Versions for MobileMeshViewer
+* * * * * root wget -U yanic_collector -q -4 http://fgw03.freifunk-siegburg.de/05_graph_v1.json -O /opt/data/fgw03/05_graph_v1.json; cp /opt/data/fgw03/05_graph_v1.json /opt/data/fgw03/domain05/graph_v1.json >/dev/null 2>&1
+* * * * * root wget -U yanic_collector -q -4 http://fgw03.freifunk-siegburg.de/05_nodes_v1.json -O /opt/data/fgw03/05_nodes_v1.json; /opt/data/jsoncheck.pl /opt/data/fgw03/05_nodes_v1.json /opt/data/fgw03/domain05/nodes_v1.json >/dev/null 2>&1
+# 11
+* * * * * root wget -U yanic_collector -q -4 http://fgw03.freifunk-siegburg.de/11_graph.json -O /opt/data/fgw03/11_graph.json; cp /opt/data/fgw03/11_graph.json /opt/data/fgw03/domain11/graph.json  >/dev/null 2>&1
+* * * * * root wget -U yanic_collector -q -4 http://fgw03.freifunk-siegburg.de/11_meshviewer.json -O /opt/data/fgw03/11_meshviewer.json; cp /opt/data/fgw03/11_meshviewer.json /opt/data/fgw03/domain11/meshviewer.json >/dev/null 2>&1
+* * * * * root wget -U yanic_collector -q -4 http://fgw03.freifunk-siegburg.de/11_nodelist.json -O /opt/data/fgw03/11_nodelist.json; cp /opt/data/fgw03/11_nodelist.json /opt/data/fgw03/domain11/nodelist.json >/dev/null 2>&1
+* * * * * root wget -U yanic_collector -q -4 http://fgw03.freifunk-siegburg.de/11_nodes.json -O /opt/data/fgw03/11_nodes.json; /opt/data/jsoncheck.pl /opt/data/fgw03/11_nodes.json /opt/data/fgw03/domain11/nodes.json >/dev/null 2>&1
+# 14
+* * * * * root wget -U yanic_collector -q -4 http://fgw03.freifunk-siegburg.de/14_graph.json -O /opt/data/fgw03/14_graph.json; cp /opt/data/fgw03/14_graph.json /opt/data/fgw03/domain14/graph.json >/dev/null 2>&1
+* * * * * root wget -U yanic_collector -q -4 http://fgw03.freifunk-siegburg.de/14_meshviewer.json -O /opt/data/fgw03/14_meshviewer.json; cp /opt/data/fgw03/14_meshviewer.json /opt/data/fgw03/domain14/meshviewer.json >/dev/null 2>&1
+* * * * * root wget -U yanic_collector -q -4 http://fgw03.freifunk-siegburg.de/14_nodelist.json -O /opt/data/fgw03/14_nodelist.json; cp /opt/data/fgw03/14_nodelist.json /opt/data/fgw03/domain14/nodelist.json >/dev/null 2>&1
+* * * * * root wget -U yanic_collector -q -4 http://fgw03.freifunk-siegburg.de/14_nodes.json -O /opt/data/fgw03/14_nodes.json; /opt/data/jsoncheck.pl /opt/data/fgw03/14_nodes.json /opt/data/fgw03/domain14/nodes.json >/dev/null 2>&1
+# fgw04
+# 07
+* * * * * root wget -U yanic_collector -q -4 http://fgw04.freifunk-siegburg.de/07_graph.json -O /opt/data/fgw04/07_graph.json; cp /opt/data/fgw04/07_graph.json /opt/data/fgw04/domain07/graph.json >/dev/null 2>&1
+* * * * * root wget -U yanic_collector -q -4 http://fgw04.freifunk-siegburg.de/07_meshviewer.json -O /opt/data/fgw04/07_meshviewer.json; cp /opt/data/fgw04/07_meshviewer.json /opt/data/fgw04/domain07/meshviewer.json >/dev/null 2>&1
+* * * * * root wget -U yanic_collector -q -4 http://fgw04.freifunk-siegburg.de/07_nodelist.json -O /opt/data/fgw04/07_nodelist.json; cp /opt/data/fgw04/07_nodelist.json /opt/data/fgw04/domain07/nodelist.json >/dev/null 2>&1
+* * * * * root wget -U yanic_collector -q -4 http://fgw04.freifunk-siegburg.de/07_nodes.json -O /opt/data/fgw04/07_nodes.json; /opt/data/jsoncheck.pl /opt/data/fgw04/07_nodes.json /opt/data/fgw04/domain07/nodes.json >/dev/null 2>&1
+# 11
+* * * * * root wget -U yanic_collector -q -4 http://fgw04.freifunk-siegburg.de/11_graph.json -O /opt/data/fgw04/11_graph.json; cp /opt/data/fgw04/11_graph.json /opt/data/fgw04/domain11/graph.json >/dev/null 2>&1
+* * * * * root wget -U yanic_collector -q -4 http://fgw04.freifunk-siegburg.de/11_meshviewer.json -O /opt/data/fgw04/11_meshviewer.json; cp /opt/data/fgw04/11_meshviewer.json /opt/data/fgw04/domain11/meshviewer.json >/dev/null 2>&1
+* * * * * root wget -U yanic_collector -q -4 http://fgw04.freifunk-siegburg.de/11_nodelist.json -O /opt/data/fgw04/11_nodelist.json; cp /opt/data/fgw04/11_nodelist.json /opt/data/fgw04/domain11/nodelist.json >/dev/null 2>&1
+* * * * * root wget -U yanic_collector -q -4 http://fgw04.freifunk-siegburg.de/11_nodes.json -O /opt/data/fgw04/11_nodes.json; /opt/data/jsoncheck.pl /opt/data/fgw04/11_nodes.json /opt/data/fgw04/domain11/nodes.json >/dev/null 2>&1
+# 14
+* * * * * root wget -U yanic_collector -q -4 http://fgw04.freifunk-siegburg.de/14_graph.json -O /opt/data/fgw04/14_graph.json; cp /opt/data/fgw04/14_graph.json /opt/data/fgw04/domain14/graph.json >/dev/null 2>&1
+* * * * * root wget -U yanic_collector -q -4 http://fgw04.freifunk-siegburg.de/14_meshviewer.json -O /opt/data/fgw04/14_meshviewer.json; cp /opt/data/fgw04/14_meshviewer.json /opt/data/fgw04/domain14/meshviewer.json >/dev/null 2>&1
+* * * * * root wget -U yanic_collector -q -4 http://fgw04.freifunk-siegburg.de/14_nodelist.json -O /opt/data/fgw04/14_nodelist.json; cp /opt/data/fgw04/14_nodelist.json /opt/data/fgw04/domain14/nodelist.json >/dev/null 2>&1
+* * * * * root wget -U yanic_collector -q -4 http://fgw04.freifunk-siegburg.de/14_nodes.json -O /opt/data/fgw04/14_nodes.json; /opt/data/jsoncheck.pl /opt/data/fgw04/14_nodes.json /opt/data/fgw04/domain14/nodes.json >/dev/null 2>&1
+# gw's mck/rhb
+# voreifel1
+* * * * * root wget -U yanic_collector -q -4 http://voreifel1.freifunk-rhein-sieg.net:8080/graph.json -O /opt/data/voreifel1/15_graph.json; cp /opt/data/voreifel1/15_graph.json /opt/data/voreifel1/domain15/graph.json >/dev/null 2>&1
+* * * * * root wget -U yanic_collector -q -4 http://voreifel1.freifunk-rhein-sieg.net:8080/meshviewer.json -O /opt/data/voreifel1/15_meshviewer.json; cp /opt/data/voreifel1/15_meshviewer.json /opt/data/voreifel1/domain15/meshviewer.json >/dev/null 2>&1
+* * * * * root wget -U yanic_collector -q -4 http://voreifel1.freifunk-rhein-sieg.net:8080/nodelist.json -O /opt/data/voreifel1/15_nodelist.json; cp /opt/data/voreifel1/15_nodelist.json /opt/data/voreifel1/domain15/nodelist.json >/dev/null 2>&1
+* * * * * root wget -U yanic_collector -q -4 http://voreifel1.freifunk-rhein-sieg.net:8080/nodes.json -O /opt/data/voreifel1/15_nodes.json; /opt/data/jsoncheck.pl /opt/data/voreifel1/15_nodes.json /opt/data/voreifel1/domain15/nodes.json >/dev/null 2>&1
+# voreifel2
+* * * * * root wget -U yanic_collector -q -4 http://voreifel2.freifunk-rhein-sieg.net:8080/graph.json -O /opt/data/voreifel2/15_graph.json; cp /opt/data/voreifel2/15_graph.json /opt/data/voreifel2/domain15/graph.json >/dev/null 2>&1
+* * * * * root wget -U yanic_collector -q -4 http://voreifel2.freifunk-rhein-sieg.net:8080/meshviewer.json -O /opt/data/voreifel2/15_meshviewer.json; cp /opt/data/voreifel2/15_meshviewer.json /opt/data/voreifel2/domain15/meshviewer.json >/dev/null 2>&1
+* * * * * root wget -U yanic_collector -q -4 http://voreifel2.freifunk-rhein-sieg.net:8080/nodelist.json -O /opt/data/voreifel2/15_nodelist.json; cp /opt/data/voreifel2/15_nodelist.json /opt/data/voreifel2/domain15/nodelist.json >/dev/null 2>&1
+* * * * * root wget -U yanic_collector -q -4 http://voreifel2.freifunk-rhein-sieg.net:8080/nodes.json -O /opt/data/voreifel2/15_nodes.json; /opt/data/jsoncheck.pl /opt/data/voreifel2/15_nodes.json /opt/data/voreifel2/domain15/nodes.json >/dev/null 2>&1

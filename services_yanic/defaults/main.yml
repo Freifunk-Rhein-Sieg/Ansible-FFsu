@@ -1,0 +1,58 @@
+---
+
+# go
+#go_version: 1.8.6
+go_version: 1.11.2
+
+# yanic 
+yanic_source: github.com/Freifunk-Rhein-Sieg/yanic
+
+
+yanic_publisher: false
+yanic_respondd: true
+yanic_respondd_collect_interval: 1m
+yanic_respondd_synchronize_interval: 1m
+
+yanic_respondd_interface: "eth0"
+yanic_respondd_fe80ip: "fe80_ipv6"
+
+yanic_webserver: false
+yanic_webserver_bind: "{{ ansible_default_ipv4.address }}:80"
+yanic_webserver_webroot: "/var/www/html/meshviewer"
+
+yanic_nodes: true
+yanic_nodes_state_path: "/var/lib/yanic/yanic.json"
+yanic_nodes_save_interval: 5s
+yanic_nodes_offline_after: 10m
+yanic_nodes_prune_after: 7d
+
+yanic_sites: "su-su,su-sa,su-lo,su-mck,su-rhb,su-snw,su-ak,su-mck,su-nk"
+
+yanic_meshviewer_ffsu_enable: true
+yanic_meshviewer_ffsu_path: "/var/www/html/meshviewer/data/meshviewer.json"
+
+yanic_meshviewer_enable: true
+yanic_meshviewer_version: 2
+yanic_meshviewer_path: "/var/www/html/meshviewer/data"
+yanic_meshviewer_nodes: "{{yanic_meshviewer_path}}/nodes.json"
+yanic_meshviewer_graph: "{{yanic_meshviewer_path}}/graph.json"
+yanic_meshiewer_nodelist: "{{yanic_meshviewer_path}}/nodelist.json"
+
+yanic_database_delete_after: 7d
+yanic_database_delete_interval: 1h
+
+yanic_repondd_enable: false
+yanic_repondd_remotehost: "[ipv6]:10001"
+
+yanic_influxdb:
+- enable: false
+  # dummy entry - new mapserver
+  host: http://93.241.53.98:8086
+  database: ffsu
+  username: ""
+  password: ""
+yanic_graphite:
+- enable: false
+  address: "localhost:2003"
+  prefix: "freifunk"
+

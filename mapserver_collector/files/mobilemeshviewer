@@ -1,0 +1,10 @@
+#
+# cron.d/mobilemeshviewer -- schedules periodic merges of .json files for MobileMeshViewer
+#
+# Copyright © technik <technik@freifunk-siegburg.de>
+# distributed under the terms of GPL 2.0
+#
+
+# .json files
+*/5 * * * * root /opt/data/merge_json.pl; /opt/data/generate_nodelist.pl; /opt/data/generate_wifi_aliases.pl; /opt/data/generate_wifi_vendors.pl >/dev/null 2>&1
+

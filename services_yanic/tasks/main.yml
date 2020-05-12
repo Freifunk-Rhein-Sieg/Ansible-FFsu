@@ -1,0 +1,72 @@
+---
+
+# go 
+
+- name: Download and install go
+  unarchive: src=https://dl.google.com/go/go{{ go_version }}.linux-amd64.tar.gz dest=/usr/local remote_src=yes creates=/usr/local/go/bin/go
+
+- name: Configure go
+  copy: src=go.sh dest=/etc/profile.d/go.sh
+
+# yanic
+
+- name: Add the user 'yanic'
+  user:
+    name: yanic
+    comment: yanic respondd
+    shell: /bin/false
+    #    uid: 123456
+    #    group: yanic
+
+
+- name: Install yanic
+  shell: /usr/local/go/bin/go get -v -u {{ yanic_source }}
+  args:
+   creates: /opt/go/bin/yanic
+  environment:
+    GOPATH: /opt/go
+  notify: Restart yanic
+
+- name: Create directories
+  file: path={{ item }}/ state=directory owner=yanic
+  with_items:
+    - "{{ yanic_meshviewer_path }}"
+    - /var/lib/yanic
+    - /etc/yanic
+
+- name: Copy webserver README
+  copy: src=web_README.md dest={{yanic_webserver_webroot}}/data/README.md
+
+- name: Copy validator script
+  copy: src=yanic_config_validator.sh dest=/home/yanic/yanic_config_validator.sh
+  
+- name: Copy hourly validator cronjob
+  copy: src=yanic_validator dest=/etc/cron.hourly/yanic_validator
+  
+# for each bat-interface
+
+
+
+#- name: Configure yanic
+#  template: src={{ ansible_hostname }}_yanic_bat{{item.key[0]}}{{item.key[1]}}.toml.j2 dest=/etc/yanic/yanic_bat{{item.key[0]}}{{item.key[1]}}.conf
+#  with_dict: "{{domaenenliste}}"
+#  when: domaenenliste is defined
+
+
+  
+
+#- name: Install systemd unit
+#  copy: src=yanic_bat{{item.key[0]}}{{item.key[1]}}.service dest=/lib/systemd/system/yanic_bat{{item.key[0]}}{{item.key[1]}}.service
+#  with_dict: "{{domaenenliste}}"
+#  notify:
+#    - Reload systemd
+#  when: domaenenliste is defined
+
+
+#- name: Enable yanic
+#  service: name=yanic_bat{{item.key[0]}}{{item.key[1]}} enabled=yes
+#  with_dict: "{{domaenenliste}}"
+#  when: domaenenliste is defined
+
+
+

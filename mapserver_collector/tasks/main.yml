@@ -1,0 +1,151 @@
+---
+- name: create yanic data folders
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: www-data
+    group: www-data
+    mode: 0775
+  with_items:
+    - /opt/data
+    - /opt/data/tdf4
+    - /opt/data/tdf4/tdf
+    - /opt/data/tdf5
+    - /opt/data/tdf5/inn
+    - /opt/data/tdf6
+    - /opt/data/tdf6/flu
+    - /opt/data/fgw01
+    - /opt/data/fgw01/domain07
+    - /opt/data/fgw02
+    - /opt/data/fgw02/domain01
+    - /opt/data/fgw02/domain03
+    - /opt/data/fgw03
+    - /opt/data/fgw03/domain04
+    - /opt/data/fgw03/domain05
+    - /opt/data/fgw03/domain11
+    - /opt/data/fgw03/domain14
+    - /opt/data/fgw04
+    - /opt/data/fgw04/domain07
+    - /opt/data/fgw04/domain11
+    - /opt/data/fgw04/domain14
+    - /opt/data/voreifel1
+    - /opt/data/voreifel1/domain15
+    - /opt/data/voreifel2
+    - /opt/data/voreifel2/domain15
+    - /opt/data/mapsu
+    - /opt/data/merged
+    - /opt/data/mobilemeshviewer
+
+
+- name: copy jsoncheck.pl to /opt/data
+  copy:
+    src: jsoncheck.pl
+    dest: /opt/data/jsoncheck.pl
+    mode: 0744
+    owner: root
+    group: root
+
+- name: copy merge_json.pl to /opt/data
+  copy:
+    src: merge_json.pl
+    dest: /opt/data/merge_json.pl
+    mode: 0744
+    owner: root
+    group: root
+
+- name: copy generate-nodelist.pl to /opt/data
+  copy:
+    src: generate_nodelist.pl
+    dest: /opt/data/generate_nodelist.pl
+    mode: 0744
+    owner: root
+    group: root
+    
+- name: copy generate_wifi_aliases.pl to /opt/data
+  copy:
+    src: generate_wifi_aliases.pl
+    dest: /opt/data/generate_wifi_aliases.pl
+    mode: 0744
+    owner: root
+    group: root
+
+- name: copy generate_wifi_vendors.pl to /opt/data
+  copy:
+    src: generate_wifi_vendors.pl
+    dest: /opt/data/generate_wifi_vendors.pl
+    mode: 0744
+    owner: root
+    group: root
+
+
+- name: copy jsondump.pl to /opt/data
+  copy:
+    src: jsondump.pl
+    dest: /opt/data/jsondump.pl
+    mode: 0744
+    owner: root
+    group: root
+
+- name: copy replace_wrong_geolocation_su.pl to /opt/data
+  copy:
+    src: replace_wrong_geolocation_su.pl
+    dest: /opt/data/replace_wrong_geolocation_su.pl
+    mode: 0744
+    owner: root
+    group: root
+
+
+
+- name: copy alfred2influx.py to /opt/data
+  copy:
+    src: alfred2influx.py
+    dest: /opt/data/alfred2influx.py
+    mode: 0744
+    owner: root
+    group: root
+
+- name: copy insert_domain_tdf.pl to /opt/data
+  copy:
+    src: insert_domain_tdf.pl
+    dest: /opt/data/insert_domain_tdf.pl
+    mode: 0744
+    owner: root
+    group: root
+    
+- name: copy insert_domain_inn.pl to /opt/data
+  copy:
+    src: insert_domain_inn.pl
+    dest: /opt/data/insert_domain_inn.pl
+    mode: 0744
+    owner: root
+    group: root
+   
+- name: copy insert_domain_flu.pl to /opt/data
+  copy:
+    src: insert_domain_flu.pl
+    dest: /opt/data/insert_domain_flu.pl
+    mode: 0744
+    owner: root
+    group: root
+
+- name: copy nodesv2tov1.pl to /opt/data
+  copy:
+    src: nodesv2tov1.pl
+    dest: /opt/data/nodesv2tov1.pl
+    mode: 0744
+    owner: root
+    group: root
+
+- name: yaniccollectorcron
+  template: src=yanic_collector.cron.j2 dest=/etc/cron.d/yanic_collector
+  notify:
+  - reload cron
+
+- name: copy mobilemeshviewer to /etc/cron.d
+  copy:
+    src: mobilemeshviewer
+    dest: /etc/cron.d/mobilemeshviewer
+    mode: 0744
+    owner: root
+    group: root
+

@@ -1,0 +1,16 @@
+#################################### SMTP / Emailing ##########################
+
+[smtp]
+enabled = true
+host = {{ grafana_smtp_host }}:25
+user = {{ grafana_smtp_user }}
+password = {{ grafana_smtp_password }}
+;cert_file =
+;key_file =
+skip_verify = true
+from_address = {{ grafana_smtp_sender }}
+
+[emails]
+;welcome_email_on_sign_up = false
+
+

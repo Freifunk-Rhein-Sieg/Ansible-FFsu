@@ -1,0 +1,199 @@
+---
+
+# nginx 
+
+- name: install nginx packages
+  package:
+    name: nginx
+    state: present
+
+- name: install ssl-cert packages
+  package:
+    name: ssl-cert
+    state: present
+
+- stat: path=/etc/ssl/fullchain.pem
+  register: sslcert
+
+- name: create nginx data folders
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: www-data
+    group: www-data
+    mode: 0775
+  with_items:
+      - "{{ nginx_data_path }}"
+      
+
+- name: create config snippets directory
+  file:
+    path: /etc/nginx/snippets
+    state: directory
+    mode: 0755
+    owner: root
+    group: root
+
+- name: create certs directory
+  file:
+    path: /etc/nginx/ssl/{{ inventory_hostname_short }}.{{ http_domain_external }}
+    state: directory
+    mode: 0550
+    owner: www-data
+    group: www-data
+
+
+
+- name: create snakeoil cert
+  shell: make-ssl-cert generate-default-snakeoil
+  args:
+    creates: /etc/ssl/certs/ssl-cert-snakeoil.pem
+
+- name: copy snakeoil ssl key for first start
+  copy:
+    src: /etc/ssl/private/ssl-cert-snakeoil.key
+    dest: /etc/nginx/ssl/{{ inventory_hostname_short }}.{{ http_domain_external }}/privkey.pem
+    remote_src: yes
+    force: no
+    owner: www-data
+    group: www-data
+    mode: 0440
+
+- name: copy snakeoil ssl cert for first start
+  copy:
+    src: /etc/ssl/certs/ssl-cert-snakeoil.pem
+    dest: /etc/nginx/ssl/{{ inventory_hostname_short }}.{{ http_domain_external }}/fullchain.pem
+    remote_src: yes
+    force: no
+    owner: www-data
+    group: www-data
+    mode: 0440
+
+
+- name: copy gzip.conf to snippets
+  copy:
+    src: gzip.conf
+    dest: /etc/nginx/snippets/gzip.conf
+    mode: 0644
+    owner: root
+    group: root
+
+- name: copy redirect-to-ssl.conf to snippets
+  copy:
+    src: redirect-to-ssl.conf
+    dest: /etc/nginx/snippets/redirect-to-ssl.conf
+    mode: 0644
+    owner: root
+    group: root
+
+- name: copy proxy_pass.conf to snippets
+  copy:
+    src: proxy_pass.conf
+    dest: /etc/nginx/snippets/proxy_pass.conf
+    mode: 0644
+    owner: root
+    group: root
+
+
+- name: write letsencrypt-acme-challenge.conf to snippets
+  template:
+    src: letsencrypt-acme-challenge.conf.j2
+    dest: /etc/nginx/snippets/letsencrypt-acme-challenge.conf
+    mode: 0644
+    owner: root
+    group: root
+
+- name: write nginx configuration nginx.conf
+  template:
+    src: nginx.conf.j2
+    dest: /etc/nginx/nginx.conf
+    mode: 0644
+    owner: root
+    group: root
+  notify: restart nginx
+
+
+- name: write nginx configuration grafana_vhost.conf
+  template:
+    src: grafana_vhost.conf.j2
+    dest: /etc/nginx/conf.d/grafana_vhost.conf
+    owner: root
+    group: root 
+    mode: 0644
+  notify: restart nginx
+
+- name: write nginx configuration meshviewer_noredirect.conf
+  template:
+    src: meshviewer.conf.j2
+    dest: /etc/ssl/nginx/conf.d/meshviewer_noredirect.conf
+    mode: 0644
+    owner: root
+    group: root    
+
+- name: Letsencrypt-Zertifikat beantragen und installieren
+  shell: cd /usr/src && if [ ! -e simp_le ]; then git clone https://github.com/zenhack/simp_le ; fi && cd simp_le && ./bootstrap.sh && if [ ! -e venv/bin/python ]; then ./venv.sh; fi && export PATH=/usr/src/simp_le/venv/bin:$PATH && cd /etc/ssl && simp_le --email technik@{{http_domain_external}} -f account_key.json -f key.pem -f fullchain.pem -d {{http_grafana_prefix}}.{{http_domain_external}}:{{nginx_data_path}} 
+  notify: restart nginx
+  when: sslcert.stat.exists == False
+
+- name: Cronjob für Zertifikatserneuerung
+  cron: name="simp_le" weekday="2" hour="20" minute="0" job="/etc/ssl/renew_cert.sh"
+
+
+
+- name: configure systemd unit nginx
+  systemd:
+    name: nginx
+    state: started
+    enabled: yes
+
+
+# grafana
+
+- name: Import Grafana GPG signing key
+  apt_key: url=https://packagecloud.io/gpg.key  state=present
+
+- name: Add Grafana repository
+  apt_repository: repo='deb https://packagecloud.io/grafana/stable/debian/ stretch main' state=present
+
+- name: Add the user 'grafana'
+  user:
+    name: grafana
+    comment: grafana account
+    shell: /bin/false
+    home: /var/lib/grafana
+
+- name: Ensure group "grafana" exists
+  group:
+      name: grafana
+      state: present
+
+- name: Install Grafana packages
+  apt: name=grafana state=present
+
+- name: create grafana folders
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: grafana
+    group: grafana
+    mode: 0775
+  with_items:
+      - "{{ grafana_data_path }}"
+      - "{{ grafana_data_path }}/data"
+      - "{{ grafana_data_path }}//plugins"
+
+
+- name: configure grafana
+  template: src=grafana.ini.j2 dest=/etc/grafana/grafana.ini.default
+
+- name: copy grafana smtp default template
+  template: src=grafana_smtp.default.j2 dest=/etc/grafana/grafana_smtp.default
+
+- name: join grafana ini templates on host
+  shell: cat /etc/grafana/grafana.ini.default /etc/grafana/grafana_smtp.ini > /etc/grafana/grafana.ini
+
+- name: Enable grafana
+  service: name=grafana-server enabled=yes
+  notify:
+    - Restart grafana
+

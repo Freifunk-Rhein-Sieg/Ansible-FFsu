@@ -1,0 +1,36 @@
+---
+http_meshviewer_prefix: "map"
+http_domain_external: "freifunk-rhein-sieg.net"
+http_domain_internal: "freifunk-rhein-sieg.net"
+
+http_grafana_prefix: "grafana"
+http_influx_prefix: "influx"
+
+
+http_meshviewer_external: "{{ http_meshviewer_prefix }}.{{ http_domain_external }}"
+http_meshviewer_internal: "{{ http_meshviewer_prefix }}.{{ http_domain_internal }}"
+
+meshviewer_path: "/var/www/{{ http_meshviewer_external }}"
+meshviewer_src: "/usr/src/meshviewer"
+
+map_layers:
+  - osm_mapnik_cached:
+    name: 'OpenStreetMap.Mapnik CACHED'
+    url: 'https://{{ http_meshviewer_external }}/tiles/{z}/{x}/{y}.png'
+    max_zoom: 19
+    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+  - osm_mapnik:
+    name: 'OpenStreetMap.Mapnik'
+    url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+    max_zoom: 19
+    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+  - osm_hot:
+    name: 'OpenStreetMap.HOT'
+    url: 'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png'
+    max_zoom: 19
+    attribution: '&copy; Openstreetmap France | &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+  - esri_world:
+    name: 'Esri.WorldImagery'
+    url: '//server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
+    max_zoom: 19
+    attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'

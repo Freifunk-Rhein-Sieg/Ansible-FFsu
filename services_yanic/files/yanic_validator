@@ -1,0 +1,4 @@
+#!/bin/sh
+# configure and restart  yanic_batXX service to generate nodestats
+#
+/home/yanic/yanic_config_validator.sh

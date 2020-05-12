@@ -1,0 +1,14 @@
+[Unit]
+Description=yanic_bat02
+After=network-online.target
+
+[Service]
+Type=simple
+User=yanic
+ExecStart=/opt/go/bin/yanic serve --config /etc/yanic/yanic_bat02.conf
+Restart=always
+RestartSec=5s
+Environment=PATH=/usr/bin:/usr/local/bin
+
+[Install]
+WantedBy=multi-user.target
